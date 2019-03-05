@@ -6,11 +6,10 @@ const jwtAuth = require('../middlewares/auth');
 
 router.get('/', catchAsync(dataController.controller.findAll));
 router.post('/', jwtAuth.jwtAuth,catchAsync(dataController.controller.create));
-router.delete('/', catchAsync(dataController.controller.removeAll));
+router.delete('/',jwtAuth.jwtAuth, catchAsync(dataController.controller.removeAll));
 
 //yyyy-mm-dd
 router.get('/:currentDay', catchAsync(dataController.controller.findByDay));
-router.delete('/:currentDay', catchAsync(dataController.controller.removeByDay));
-
+router.delete('/:currentDay', jwtAuth.jwtAuth, catchAsync(dataController.controller.removeByDay));
 
 module.exports = router;

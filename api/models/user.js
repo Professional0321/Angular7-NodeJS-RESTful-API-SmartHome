@@ -11,10 +11,10 @@ const userSchema = new mongoose.Schema({
         trim: true
     }
 }, {
-    timestamps: true
-});
+        timestamps: true
+    });
 
-userSchema.plugin(passportLocalMongoose, {usernameField: 'email'});
+userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

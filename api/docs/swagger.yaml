@@ -4,13 +4,12 @@ info:
   description: | 
     Documentation for Smart Home REST API
     
-     For consuming some endpoints it is required to authenticate with API access`token`. If token expires you will need to refresh him with `refreshToken`
+     For consuming some endpoints it is required to authenticate with API access`token`. If token expires you will need to refresh it. Token expires after `30 min`.
   version: 1.0.0
   contact: 
     name: Dawid Krakowczyk
     email: dawid.krakowczyk.1996@gmail.com
-  license:
-    name: 
+
 host: "http://35.234.82.79:8090"
 basePath: /
 schemes:
@@ -20,34 +19,39 @@ consumes:
 produces:
   - application/json
 tags:
-  - name: Users
-    description: Users operations
-  - name: Content
-    description: Content operations
+  - name: Auth
+    description: Auth operations
+  - name: Data
+    description: Data operations
+  - name: Alarm
+    description: Alarm operations
 paths:
-  /user/singup:
+  /auth/register:
     post:
       tags: 
-      - Users
+      - Auth
       summary: Register a new user
       description: Register a new user in application
       parameters:
-        - name: register
-          in: body
-          description: | 
-            User `login` or `e-mail` cannot dublicate with existing ones in database. 
-              `password` must contain: 
-              *  at least eight characters 
-              *  at least one uppercase letter 
-              *  one lowercase letter 
-              *  one number
-                
-              Property `role` has one of the following values:
-              * `FORESTER`
-              * `USER`
-              
-              In case of regular user following fields are optional:
-              * `personalId`
+        - name: first_name
+          description: User first name
+          in: formData
+          type: String
+          required: true
+        - name: last_name
+          description: User last name
+          in: formData
+          type: String
+          required: true
+        - name: email
+          description: User email
+          in: formData
+          type: String
+          required: true
+        - name: password
+          description: User password
+          in: formData
+          type: String
           required: true
           schema:
            $ref: '#definitions/Register'
@@ -56,29 +60,27 @@ paths:
       responses:
         201:
           description: CREATED
-        400:
-          description: BAD REQUEST
           schema:
-            $ref: '#definitions/Error'
-        409:
-          description: CONFLICT
-          schema:
-            $ref: '#definitions/Error'
+           $ref: '#definitions/Register'
         500: 
           description: INTERNAL SERVER ERROR
-  /user/login:
+  /auth/login:
     post:
       tags: 
-      - Users
+      - Auth
       summary: Login with user credentials
       description: Login for existing users
       parameters:
-        - name: login
-          in: body
-          description: "User login data"
+        - name: email
+          description: User email
+          in: formData
+          type: String
           required: true
-          schema:
-           $ref: '#definitions/Login'
+        - name: password
+          description: User password
+          in: formData
+          type: String
+          required: true
       produces:
         - application/json
       responses:
@@ -86,122 +88,224 @@ paths:
           description: OK
           schema:
             $ref: '#definitions/LoginResponse'
-        400:
-          description: BAD REQUEST
-          schema:
-            $ref: '#definitions/Error'
         401:
           description: UNAUTHORIZED
-          schema:
-            $ref: '#definitions/Error'
         500: 
           description: INTERNAL SERVER ERROR
-  /user/login-facebook:
-    post:
+  /data:
+    get:
       tags:
-      - Users
-      summary: Login with Facebook
-      description: Login with Facebook account
-      parameters:
-        - name: "facebookId"
-          in: body
-          description: User's `facebookId` number
-          required: true
-          schema:
-            $ref: '#definitions/LoginWithFacebook'
+      - Data 
+      summary: Get all data
+      parameters: []
       produces:
         - application/json
       responses:
         200:
-          description: OK
+          description: SUCCESS
           schema:
-            $ref: '#definitions/LoginResponse'
+            $ref: '#definitions/postData'
         400:
           description: BAD REQUEST
-          schema:
-            $ref: '#definitions/Error'
-        500: 
-          description: INTERNAL SERVER ERROR
-  /user/refresh-token:
-    post:
-      tags:
-      - Users
-      summary: Refreshing token
-      description: Refresh API token with valid refresh token
-      parameters:
-        - name: refreshToken
-          in: body
-          description: Valid refresh token
-          required: true
-          schema:
-            $ref: '#definitions/RefreshToken'
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#definitions/Token'
-        400:
-          description: BAD REQUEST
-          schema:
-            $ref: '#definitions/Error'
         401:
           description: UNAUTHORIZED
-          schema:
-            $ref: '#definitions/Error'
         500: 
-          description: INTERNAL SERVER ERROR
-  /data/upload:
+          description: INTERNAL SERVER ERROR        
     post:
       security:
       - Bearer: []
       tags:
-      - Content 
+      - Data 
       summary: Upload new content 
-      description: This endpoint enable to upload new content such as images and videos
-      consumes:
-        - multipart/form-data
+      description: This endpoint allows to upload new content such as temperature and humidity
       parameters:
-        - name: medias
+        - name: temperature
           description: |
-            Files to upload, up to 10 files can be send 
-            Accepted files: 
-              *  mp4
-              *  png 
-              *  jpeg 
+            Temperature value (min: 0, max: 50)
           in: formData
-          type: file
-        - name:  title
-          description: Article title
-          in: formData
-          type: string
+          type: Number
           required: true
-        - name: subTitle
-          description: Article subtitle
+        - name:  Humidity
+          description: Humidity value (min: 25, max: 95)
           in: formData
-          type: string
-        - name: description
-          description: Whole content of article
-          in: formData
-          type: string
+          type: Number
           required: true
+          schema:
+           $ref: '#definitions/postData'
       produces:
         - application/json
       responses:
         201:
           description: CREATED
+          schema:
+            $ref: '#definitions/postData'
         400:
           description: BAD REQUEST
-          schema:
-            $ref: '#definitions/Error'
         401:
           description: UNAUTHORIZED
-          schema:
-            $ref: '#definitions/Error'
         500: 
           description: INTERNAL SERVER ERROR
-
+    delete:
+      security:
+      - Bearer: []
+      tags:
+      - Data 
+      summary: Wipe database
+      description: This endpoint allows to wipe database
+      parameters: []
+      produces: []
+      responses:
+        201:
+          description: SUCCESS
+        400:
+          description: BAD REQUEST
+        401:
+          description: UNAUTHORIZED
+        500: 
+          description: INTERNAL SERVER ERROR
+  /data/:currentDay:
+    get:
+      tags:
+      - Data 
+      summary: Get all data from specified day
+      parameters: 
+        - name: currentDay
+          description: |
+            Day (yyyy-mm-dd | yyyy/mm/dd)
+          in: formData
+          type: String
+          required: true
+      produces:
+        - application/json
+      responses:
+        200:
+          description: SUCCESS
+          schema:
+            $ref: '#definitions/postData'
+        400:
+          description: BAD REQUEST
+        401:
+          description: UNAUTHORIZED
+        500: 
+          description: INTERNAL SERVER ERROR
+    delete:
+      security:
+      - Bearer: []
+      tags:
+      - Data 
+      summary: Delete all data from specified day
+      parameters: 
+        - name: currentDay
+          description: |
+            Day (yyyy-mm-dd | yyyy/mm/dd)
+          in: formData
+          type: String
+          required: true
+      produces: []
+      responses:
+        200:
+          description: SUCCESS
+        400:
+          description: BAD REQUEST
+        401:
+          description: UNAUTHORIZED
+        500: 
+          description: INTERNAL SERVER ERROR 
+  /alarm:
+    get:
+      tags:
+      - Alarm 
+      summary: Get alarm status
+      parameters: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: SUCCESS
+          schema:
+            $ref: '#definitions/alarmData'
+        400:
+          description: BAD REQUEST
+        401:
+          description: UNAUTHORIZED
+        500: 
+          description: INTERNAL SERVER ERROR        
+  /alarm/short:
+    get:
+      tags:
+      - Alarm 
+      summary: Return simplified response for Arduino users (0/1)
+      parameters: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: 0/1
+        400:
+          description: BAD REQUEST
+        401:
+          description: UNAUTHORIZED
+        500: 
+          description: INTERNAL SERVER ERROR
+  /alarm/create:
+    post:
+      security:
+      - Bearer: []
+      tags:
+      - Alarm 
+      summary: Create an alarm when it does not exist yet
+      parameters: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: SUCCESS
+          schema:
+            $ref: '#definitions/alarmData'
+        400:
+          description: BAD REQUEST
+        401:
+          description: UNAUTHORIZED
+        500: 
+          description: INTERNAL SERVER ERROR
+  /alarm/enable:
+    post:
+      security:
+      - Bearer: []
+      tags:
+      - Alarm 
+      summary: Enable alarm
+      parameters: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Alarm enabled
+        400:
+          description: BAD REQUEST
+        401:
+          description: UNAUTHORIZED
+        500: 
+          description: INTERNAL SERVER ERROR
+  /alarm/disable:
+    post:
+      security:
+      - Bearer: []
+      tags:
+      - Alarm 
+      summary: Disable alarm
+      parameters: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Alarm disabled
+        400:
+          description: BAD REQUEST
+        401:
+          description: UNAUTHORIZED
+        500: 
+          description: INTERNAL SERVER ERROR
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -209,88 +313,60 @@ securityDefinitions:
     in: Header
 
 definitions:
-  Error:
-    properties:
-      message:
-        type: string
-      path:
-        type: string
-      timestamp:
-        type: string
   Register:
       required:
-        - login
-        - password
+        - first_name
+        - last_name
         - email
-        - role
-        - firstName
-        - lastName
+        - password
       properties:
-        login:
+        first_name:
           type: string
-          example: user123
-        password:
+          example: Jane
+        last_name:
           type: string
-          example: Password123
+          example: Doe
         email:
           type: string
           example: example@gmail.com
-        role:
+        password:
           type: string
-          example: FORESTER
-          enum:
-          - FORESTER
-          - USER
-        firstName:
-          type: string
-          example: Jan
-        lastName:
-          type: string
-          example: Kowalski
-        personalId:
-          type: integer
-          example: 90090515836
+          example: password123!
   Login:
     required:
-    - login
+    - email
     - password
     properties:
-      login: 
+      email: 
         type: string
-        example: user123
+        example: example@gmail.com
       password:
         type: string
         example: Password123
   LoginResponse:
     properties:
-      message:
-        type: string
-        example: Authorization successful
       token:
         type: string
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRvbWFzejEyMyIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTU0OTcyNjkxMiwiZXhwIjoxNTQ5NzI4NzEyfQ.zRnIv_-SIyL3uJYjs3dnki11xbptFZF0qxrW2B_Mt2U
-      expiresIn:
-        type: integer
-        example: 1800
-      refreshToken: 
-        type: string
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRvbWFzejEyMyIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTU0OTcyNjkxMiwiZXhwIjoxNTQ5NzI4NzEyfQ.zRnIv_-SIyL3uJYjs3dnki11xbptFZF0qxrW2B_Mt2U
-  RefreshToken:
-    required:
-      - refreshToken
-    properties:
-      refreshToken:
-        type: string
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRvbWVrMSIsInJvbGUiOiJGT1JFU1RFUiIsImlhdCI6MTU0OTgyMjI4MSwiZXhwIjoxNTQ5OTA4NjgxfQ.Y4qSNGFblEm73LRxxKG-Ruf9p6hjn-4HfOzQHZn751A
   Token:
     properties:
       token:
         type: string
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRvbWVrMSIsInJvbGUiOiJGT1JFU1RFUiIsImlhdCI6MTU0OTgyMjI4MSwiZXhwIjoxNTQ5OTA4NjgxfQ.Y4qSNGFblEm73LRxxKG-Ruf9p6hjn-4HfOzQHZn751A
-  LoginWithFacebook:
-    required:
-      - facebookId
+  postData:
     properties:
-      facebookId:
-        type: integer
-        example: 1231231
+      temperature: 
+        type: Number
+        example: 23
+      humidity:
+        type: Number
+        example: 55
+      date:
+        type: String
+        example: 2019-08-05(yyyy-mm-dd)
+  alarmData:
+    properties:
+      status: 
+        type: Boolean
+        example: true
+ 

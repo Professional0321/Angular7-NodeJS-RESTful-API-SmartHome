@@ -1,7 +1,7 @@
 const mongoose = require("../database/database");
 
 const alarmSchema = new mongoose.Schema({
-status: Boolean
+    status: Boolean
 });
 
 
