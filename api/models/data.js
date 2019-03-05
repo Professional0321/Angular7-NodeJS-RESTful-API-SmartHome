@@ -1,6 +1,6 @@
 const mongoose = require("../database/database");
 
-const DataSchema = new mongoose.Schema({
+const dataSchema = new mongoose.Schema({
 temperature: {
     type: Number,
     min: 0,
@@ -15,6 +15,6 @@ date: String
 });
 
 
-const Data = mongoose.model("Data", DataSchema);
+const Data = mongoose.model("Data", dataSchema);
 
 module.exports = Data;

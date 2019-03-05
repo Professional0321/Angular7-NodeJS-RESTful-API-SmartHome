@@ -1,0 +1,296 @@
+swagger: "2.0.0"
+info:
+  title: Smart Home RESTful API
+  description: | 
+    Documentation for Smart Home REST API
+    
+     For consuming some endpoints it is required to authenticate with API access`token`. If token expires you will need to refresh him with `refreshToken`
+  version: 1.0.0
+  contact: 
+    name: Dawid Krakowczyk
+    email: dawid.krakowczyk.1996@gmail.com
+  license:
+    name: 
+host: "http://35.234.82.79:8090"
+basePath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Users
+    description: Users operations
+  - name: Content
+    description: Content operations
+paths:
+  /user/singup:
+    post:
+      tags: 
+      - Users
+      summary: Register a new user
+      description: Register a new user in application
+      parameters:
+        - name: register
+          in: body
+          description: | 
+            User `login` or `e-mail` cannot dublicate with existing ones in database. 
+              `password` must contain: 
+              *  at least eight characters 
+              *  at least one uppercase letter 
+              *  one lowercase letter 
+              *  one number
+                
+              Property `role` has one of the following values:
+              * `FORESTER`
+              * `USER`
+              
+              In case of regular user following fields are optional:
+              * `personalId`
+          required: true
+          schema:
+           $ref: '#definitions/Register'
+      produces:
+        - application/json
+      responses:
+        201:
+          description: CREATED
+        400:
+          description: BAD REQUEST
+          schema:
+            $ref: '#definitions/Error'
+        409:
+          description: CONFLICT
+          schema:
+            $ref: '#definitions/Error'
+        500: 
+          description: INTERNAL SERVER ERROR
+  /user/login:
+    post:
+      tags: 
+      - Users
+      summary: Login with user credentials
+      description: Login for existing users
+      parameters:
+        - name: login
+          in: body
+          description: "User login data"
+          required: true
+          schema:
+           $ref: '#definitions/Login'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#definitions/LoginResponse'
+        400:
+          description: BAD REQUEST
+          schema:
+            $ref: '#definitions/Error'
+        401:
+          description: UNAUTHORIZED
+          schema:
+            $ref: '#definitions/Error'
+        500: 
+          description: INTERNAL SERVER ERROR
+  /user/login-facebook:
+    post:
+      tags:
+      - Users
+      summary: Login with Facebook
+      description: Login with Facebook account
+      parameters:
+        - name: "facebookId"
+          in: body
+          description: User's `facebookId` number
+          required: true
+          schema:
+            $ref: '#definitions/LoginWithFacebook'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#definitions/LoginResponse'
+        400:
+          description: BAD REQUEST
+          schema:
+            $ref: '#definitions/Error'
+        500: 
+          description: INTERNAL SERVER ERROR
+  /user/refresh-token:
+    post:
+      tags:
+      - Users
+      summary: Refreshing token
+      description: Refresh API token with valid refresh token
+      parameters:
+        - name: refreshToken
+          in: body
+          description: Valid refresh token
+          required: true
+          schema:
+            $ref: '#definitions/RefreshToken'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#definitions/Token'
+        400:
+          description: BAD REQUEST
+          schema:
+            $ref: '#definitions/Error'
+        401:
+          description: UNAUTHORIZED
+          schema:
+            $ref: '#definitions/Error'
+        500: 
+          description: INTERNAL SERVER ERROR
+  /data/upload:
+    post:
+      security:
+      - Bearer: []
+      tags:
+      - Content 
+      summary: Upload new content 
+      description: This endpoint enable to upload new content such as images and videos
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: medias
+          description: |
+            Files to upload, up to 10 files can be send 
+            Accepted files: 
+              *  mp4
+              *  png 
+              *  jpeg 
+          in: formData
+          type: file
+        - name:  title
+          description: Article title
+          in: formData
+          type: string
+          required: true
+        - name: subTitle
+          description: Article subtitle
+          in: formData
+          type: string
+        - name: description
+          description: Whole content of article
+          in: formData
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        201:
+          description: CREATED
+        400:
+          description: BAD REQUEST
+          schema:
+            $ref: '#definitions/Error'
+        401:
+          description: UNAUTHORIZED
+          schema:
+            $ref: '#definitions/Error'
+        500: 
+          description: INTERNAL SERVER ERROR
+
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: Header
+
+definitions:
+  Error:
+    properties:
+      message:
+        type: string
+      path:
+        type: string
+      timestamp:
+        type: string
+  Register:
+      required:
+        - login
+        - password
+        - email
+        - role
+        - firstName
+        - lastName
+      properties:
+        login:
+          type: string
+          example: user123
+        password:
+          type: string
+          example: Password123
+        email:
+          type: string
+          example: example@gmail.com
+        role:
+          type: string
+          example: FORESTER
+          enum:
+          - FORESTER
+          - USER
+        firstName:
+          type: string
+          example: Jan
+        lastName:
+          type: string
+          example: Kowalski
+        personalId:
+          type: integer
+          example: 90090515836
+  Login:
+    required:
+    - login
+    - password
+    properties:
+      login: 
+        type: string
+        example: user123
+      password:
+        type: string
+        example: Password123
+  LoginResponse:
+    properties:
+      message:
+        type: string
+        example: Authorization successful
+      token:
+        type: string
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRvbWFzejEyMyIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTU0OTcyNjkxMiwiZXhwIjoxNTQ5NzI4NzEyfQ.zRnIv_-SIyL3uJYjs3dnki11xbptFZF0qxrW2B_Mt2U
+      expiresIn:
+        type: integer
+        example: 1800
+      refreshToken: 
+        type: string
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRvbWFzejEyMyIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTU0OTcyNjkxMiwiZXhwIjoxNTQ5NzI4NzEyfQ.zRnIv_-SIyL3uJYjs3dnki11xbptFZF0qxrW2B_Mt2U
+  RefreshToken:
+    required:
+      - refreshToken
+    properties:
+      refreshToken:
+        type: string
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRvbWVrMSIsInJvbGUiOiJGT1JFU1RFUiIsImlhdCI6MTU0OTgyMjI4MSwiZXhwIjoxNTQ5OTA4NjgxfQ.Y4qSNGFblEm73LRxxKG-Ruf9p6hjn-4HfOzQHZn751A
+  Token:
+    properties:
+      token:
+        type: string
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRvbWVrMSIsInJvbGUiOiJGT1JFU1RFUiIsImlhdCI6MTU0OTgyMjI4MSwiZXhwIjoxNTQ5OTA4NjgxfQ.Y4qSNGFblEm73LRxxKG-Ruf9p6hjn-4HfOzQHZn751A
+  LoginWithFacebook:
+    required:
+      - facebookId
+    properties:
+      facebookId:
+        type: integer
+        example: 1231231
