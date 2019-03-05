@@ -25,6 +25,10 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
+app.get('/', (req, res) =>{
+    res.redirect('/api/api-docs');
+})
+
 app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerdoc))
 app.use('/api/data', dataRoutes);
 app.use('/api/alarm', alarmRoutes);

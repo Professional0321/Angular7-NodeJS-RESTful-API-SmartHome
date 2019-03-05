@@ -13,6 +13,9 @@
   ],
   "author": "DKrakowczyk",
   "license": "MIT",
+  "engines": {
+    "node": "10.15.1"
+  },
   "dependencies": {
     "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
