@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const dataController = require('../controllers/dataController');
 const catchAsync = require('../middlewares/errors').catchAsync;
+const jwtAuth = require('../middlewares/auth');
 
 router.get('/', catchAsync(dataController.controller.findAll));
-router.post('/', catchAsync(dataController.controller.create));
+router.post('/', jwtAuth.jwtAuth,catchAsync(dataController.controller.create));
 router.delete('/', catchAsync(dataController.controller.removeAll));
 
 //yyyy-mm-dd

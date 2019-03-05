@@ -3,11 +3,10 @@ const jwt = require('jsonwebtoken');
 
 exports.controller = {
     async login(req, res, next) {
-        const token = jwt.sign({id: req.user._id}, process.env.JWT_SECRET);
-
-        return res.send({
-            status: 'done!'
-        })
+        // generate jwt
+        const token = jwt.sign({id: req.user._id}, process.env.JWT_SECRET, {expiresIn: 1800});
+        // return jwt
+        return res.send({token});
     },
     async register(req, res, next) {
         const {first_name, last_name, email, password} = req.body;

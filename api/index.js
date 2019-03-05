@@ -6,7 +6,7 @@ const path = require('path');
 const ejs = require('ejs');
 const bodyParser = require('body-parser');
 
-const dataRoutes = require('./routes/data')
+const dataRoutes = require('./routes/data');
 const alarmRoutes = require('./routes/alarm');
 const authRoutes = require('./routes/auth');
 const middlewaresErr = require('./middlewares/errors');
@@ -16,7 +16,7 @@ const swaggerdoc = yaml.load('./docs/swagger.yaml');
 const passport = require('./config/passport');
 const app = express();
 
-passport;
+passport.config();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
