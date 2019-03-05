@@ -19,7 +19,7 @@ exports.controller = {
         });
         res.send({ data: data });
     },
-    // Re
+    // Return whole database
     async findAll(req, res) {
         const data = await Data.find().sort({ createdAt: 'desc' });
         return res.status(200).send({ data: data });
