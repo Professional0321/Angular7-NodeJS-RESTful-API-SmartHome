@@ -1,10 +1,17 @@
 const mongoose = require("../database/database");
 
 const DataSchema = new mongoose.Schema({
-temperature: Number,
-humidity: Number,
-},{
-    timestamps :{createdAt: true, updatedAt: false}
+temperature: {
+    type: Number,
+    min: 0,
+    max: 50
+},
+humidity:{
+    type: Number,
+    min: 25,
+    max: 95
+} ,
+date: String
 });
 
 
