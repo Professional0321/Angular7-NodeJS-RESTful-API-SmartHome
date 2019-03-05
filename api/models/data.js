@@ -13,7 +13,9 @@ const dataSchema = new mongoose.Schema({
         max: 95,
         required: true
     },
-    date: String
+    date: String,
+}, {
+    timestamps: {createdAt: false, updatedAt:true}
 });
 
 
