@@ -1,0 +1,12 @@
+<app-header (isChart)="changeView($event)">
+
+</app-header>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <app-chart *ngIf="isChart === 'chart'" [PogodaToInject]="weather"></app-chart>
+            <app-table *ngIf="isChart === 'table'" [DataInjector]="weather"></app-table>
+        </div>
+    </div>
+</div>

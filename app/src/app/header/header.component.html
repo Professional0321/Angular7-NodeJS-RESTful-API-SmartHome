@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom: 2em">
+  <a class="navbar-brand" href="#">ProjektCPP <small>IP31</small></a>
+  <ul class="navbar-nav mr-auto">
+    <li>
+      <a class="nav-link" href="#" (click)="changeToChart()">Wykres</a>
+    </li>
+    <li>
+      <a class="nav-link" href="#" (click)="changeToTable()">Tabela</a>
+    </li>
+    <li>
+      <a class="nav-link" href="#" (click)="setAlarm()" *ngIf="!isAlarmSet" style="color: green">Włącz alarm</a>
+      <a class="nav-link" href="#" (click)="setAlarm()" *ngIf="isAlarmSet" style="color: red">Wyłącz alarm</a>
+    </li>
+    <li style="margin-left:50px">
+      <a class="nav-link" href="https://sleepy-garden-23787.herokuapp.com/api/api-docs/#/" target="_blank">Dokumentacja api</a>
+    </li>
+  </ul>
+
+  <ul class="nav navbar-nav navbar-right" style="margin-right: 10px;">
+    <li>
+      <a class="nav-link" href="#" (click)="login()" *ngIf="!isLogged">Logowanie</a>
+    </li>
+  </ul>
+  <ul class="nav navbar-nav navbar-right" style="margin-right: 10px;">
+      <li>
+        <a class="nav-link" href="#" (click)="unlogin()" *ngIf="isLogged">Wyloguj</a>
+      </li>
+    </ul>
+</nav>
