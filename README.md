@@ -6,3 +6,9 @@ https://dkrakowczyk.github.io/smartHome/
 
 ### API available here 
 https://sleepy-garden-23787.herokuapp.com
+
+### Arduino scheme
+![Screenshot](SCHEMAT.png)
+
+### Photo
+![Screenshot](IMG_20190314_194256.jpg)
