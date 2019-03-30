@@ -10,7 +10,7 @@ info:
     name: Dawid Krakowczyk
     email: dawid.krakowczyk.1996@gmail.com
 
-host: "http://35.234.82.79:8090"
+host: "https://sleepy-garden-23787.herokuapp.com"
 basePath: /
 schemes:
   - http
