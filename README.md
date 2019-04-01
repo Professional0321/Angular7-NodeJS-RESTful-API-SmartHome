@@ -19,11 +19,11 @@
 
   ![Alarm display](https://github.com/DKrakowczyk/smartHome/blob/master/SmartHome/Logging.gif?raw=true)
 
-##About API avaible here
+## About API avaible here
 
 https://sleepy-garden-23787.herokuapp.com
 
-##About Arduino
+## About Arduino
 
 ### Arduino scheme
 ![Screenshot](SCHEMAT.png)
