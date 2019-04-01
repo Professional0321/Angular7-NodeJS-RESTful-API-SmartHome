@@ -31,7 +31,8 @@ https://sleepy-garden-23787.herokuapp.com
 ### Photo
 ![Screenshot](IMG_20190314_194256.jpg)
 
-##About Angular
+## About Angular
+
 Application was written in Agular 7. It uses HTTP protocol to communicate with API. Application make **GET** request to obtain data and store it. Then after choosing date it seperate the appropriate one and then put it in HTML code via string interpolation. 
 
 ![Alarm display](https://github.com/DKrakowczyk/smartHome/blob/master/SmartHome/SelectingDate.gif?raw=true)
