@@ -19,7 +19,7 @@
 
   ![Alarm display](https://github.com/DKrakowczyk/smartHome/blob/master/SmartHome/Logging.gif?raw=true)
 
-## About API avaible here
+## About API available here
 
 https://sleepy-garden-23787.herokuapp.com
 
