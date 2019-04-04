@@ -53,3 +53,5 @@ API uses JWT (JSON Web Token) authentication to secure from unwelcome requests.
 [Mateusz Wolski - Angular app](https://github.com/matewol540)
 [Dawid Krakowczyk - NodeJS API](https://github.com/DKrakowczyk)
 [Konrad Wasiak - Arduino device](https://github.com/KonradWasiak)
+## Awesome logo by:
+[reallinfo](https://github.com/reallinfo)
