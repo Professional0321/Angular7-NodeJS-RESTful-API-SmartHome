@@ -1,4 +1,5 @@
-# SmartHome
+<p align="center"><img src="logo/horizontal.png" alt="smartHome" height="120px"></p>
+
 | Angular7 | NodeJS | Arduino |
 |--|--|--|
 
