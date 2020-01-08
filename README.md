@@ -43,15 +43,3 @@ To arm the alarm, user needs to loggin. After loggin API returns token which is 
 Application uses open source **ChartJS** to display data in chart form.
 
  ![Chart Display](https://github.com/DKrakowczyk/smartHome/blob/master/SmartHome/chart.gif?raw=true)
-#### Angular app available here 
-https://dkrakowczyk.github.io/smartHome/
-## Security
-API uses JWT (JSON Web Token) authentication to secure from unwelcome requests.
- 
-
-## Authors
-[Mateusz Wolski - Angular app](https://github.com/matewol540)
-[Dawid Krakowczyk - NodeJS API](https://github.com/DKrakowczyk)
-[Konrad Wasiak - Arduino device](https://github.com/KonradWasiak)
-## Awesome logo by:
-[reallinfo](https://github.com/reallinfo)
