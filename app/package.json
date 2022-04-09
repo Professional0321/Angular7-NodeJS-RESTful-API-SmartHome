@@ -30,7 +30,7 @@
     "hammerjs": "^2.0.8",
     "jquery": "^1.9.1",
     "material": "^0.3.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "open-iconic": "^1.1.1",
     "popper.js": "^1.14.7",
     "rxjs": "~6.3.3",
